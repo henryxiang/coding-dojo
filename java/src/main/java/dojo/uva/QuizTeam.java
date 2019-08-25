@@ -62,53 +62,62 @@ public class QuizTeam {
         results = new LinkedHashMap<>();
         for (String key : data.keySet()) {
             double[][] dists = calculateDists(data.get(key));
-            double minDist = Double.MAX_VALUE;
-            for (List<String> teams : getAllTeams(data.get(key).length)) {
-                double dist = 0.0;
-                for(String team : teams) {
-                    int i = Integer.valueOf(team.split(",")[0]);
-                    int j = Integer.valueOf(team.split(",")[1]);
-                    dist += dists[i][j];
-                }
-                if (dist < minDist) minDist = dist;
-            }
+            double minDist = getMinDist(0, dists, dists.length);
             results.put(key, minDist);
         }
     }
 
-    public List<List<String>> getAllTeams(int n) {
-        boolean[] slots = new boolean[n];
-        List<List<String>> allTeams = new ArrayList<>();
-        List<String> teams = new ArrayList<>();
-        getAllTeams(slots, teams, allTeams);
-        return allTeams;
-    }
-
-    private void getAllTeams(boolean[] slots, List<String> teams, List<List<String>> allTeams) {
-        int i = getFirstAvailable(slots);
-        if (i == -1) {
-            allTeams.add(new ArrayList<>(teams));
-            return;
+    public double getMinDist(int bitmask, double[][] dists, int size) {
+        int target = (1 << size) - 1;
+        if (bitmask == target) return 0.0;
+        int p1, p2;
+        double minDist = Double.MAX_VALUE;
+        for (p1 = 0; p1 < size; p1++) {
+            if (((1 << p1) & bitmask) == 0) break;
         }
-        slots[i] = true;
-        for (int j = i + 1; j < slots.length; j++) {
-            if (!slots[j]) {
-                slots[j] = true;
-                teams.add(i + "," + j);
-                getAllTeams(slots, teams, allTeams);
-                teams.remove(i + "," + j);
-                slots[j] = false;
+        for (p2 = p1 + 1; p2 < size; p2++) {
+            if (((1 << p2) & bitmask) == 0) {
+                int newBitmask = bitmask | (1 << p1) | (1 << p2);
+                double dist = dists[p1][p2] + getMinDist(newBitmask, dists, size);
+                if (dist < minDist) minDist = dist;
             }
         }
-        slots[i] = false;
+        return minDist;
     }
 
-    private int getFirstAvailable(boolean[] slots) {
-        for (int i = 0; i < slots.length; i++) {
-            if (!slots[i]) return i;
-        }
-        return -1;
-    }
+//    public List<List<String>> getAllTeams(int n) {
+//        boolean[] slots = new boolean[n];
+//        List<List<String>> allTeams = new ArrayList<>();
+//        List<String> teams = new ArrayList<>();
+//        getAllTeams(slots, teams, allTeams);
+//        return allTeams;
+//    }
+//
+//    private void getAllTeams(boolean[] slots, List<String> teams, List<List<String>> allTeams) {
+//        int i = getFirstAvailable(slots);
+//        if (i == -1) {
+//            allTeams.add(new ArrayList<>(teams));
+//            return;
+//        }
+//        slots[i] = true;
+//        for (int j = i + 1; j < slots.length; j++) {
+//            if (!slots[j]) {
+//                slots[j] = true;
+//                teams.add(i + "," + j);
+//                getAllTeams(slots, teams, allTeams);
+//                teams.remove(i + "," + j);
+//                slots[j] = false;
+//            }
+//        }
+//        slots[i] = false;
+//    }
+
+//    private int getFirstAvailable(boolean[] slots) {
+//        for (int i = 0; i < slots.length; i++) {
+//            if (!slots[i]) return i;
+//        }
+//        return -1;
+//    }
 
     public double[][] calculateDists(Record[] records) {
         double[][] dists = new double[records.length][records.length];
