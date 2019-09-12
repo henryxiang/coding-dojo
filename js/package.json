@@ -1,0 +1,25 @@
+{
+  "name": "coding-dojo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "dev": "parcel"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.138",
+    "@types/raphael": "^2.1.30",
+    "jest": "^24.9.0",
+    "lodash": "^4.17.15",
+    "parcel-bundler": "^1.12.3",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "raphael": "^2.3.0"
+  }
+}
