@@ -1,4 +1,4 @@
-import Raphael from "raphael";
+import Raphael from 'raphael';
 
 class TextBox {
   constructor(x, y, w, h, text) {
