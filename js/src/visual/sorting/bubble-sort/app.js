@@ -1,9 +1,9 @@
 import 'babel-polyfill';
-// import 'js-polyfills';
-// import 'mathjax';
 import {shuffle, range, random} from 'lodash';
 import Raphael from 'raphael';
-import Node, { swap } from '../graph/graph-node';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+import Node, { swap } from '../../graph/graph-node';
 import { sort } from './bubble-sort';
 
 const canvas = document.getElementById('canvas');
@@ -43,6 +43,8 @@ function init() {
     nodes[i] = node;
     paper.text(x, y + node.r + 10, i);
   }
+  document.getElementById('title').innerHTML = 'Bubble Sort ' +
+    katex.renderToString("(O(n^2))");
 }
 
 function sortData() {

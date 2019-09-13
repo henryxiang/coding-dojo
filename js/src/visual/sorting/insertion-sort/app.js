@@ -1,14 +1,14 @@
 import 'babel-polyfill';
-// import 'js-polyfills';
-// import 'mathjax';
 import {shuffle, range, random} from 'lodash';
 import Raphael from 'raphael';
-import Node, { swap } from '../graph/graph-node';
-import { sort } from './selection-sort';
+import katex from 'katex';
+import 'katex/dist/katex.min.css';
+import Node, { swap } from '../../graph/graph-node';
+import { sort } from './insertion-sort';
 
 const canvas = document.getElementById('canvas');
 const canvasSize = { width: canvas.clientWidth, height: canvas.clientHeight };
-const replayInterval = 3600;
+const replayInterval = 2000;
 const appContext = {
   paper: Raphael(canvas, canvasSize.width, canvasSize.height),
   data: null,
@@ -43,6 +43,8 @@ function init() {
     nodes[i] = node;
     paper.text(x, y + node.r + 10, i);
   }
+  document.getElementById('title').innerHTML = 'Insertion Sort ' +
+    katex.renderToString("(O(n^2))");
 }
 
 function sortData() {
@@ -83,16 +85,19 @@ function runCommand(command) {
   switch(command.type) {
     case 'swap':
       swapNodes(...command.data);
-      displayMessage(`swapping item ${command.data[1]} with the first in the range`);
+      displayMessage(`swapping item ${command.data[1]} with item ${command.data[0]}`);
       break;
     case 'highlight':
       highlightNode(command.data);
-      displayMessage(`item ${command.data} has the minimum value in the range`);
+      displayMessage(`putting item ${command.data} to the correct position in the range`);
       break;
     case 'range':
+      underlineRange(...command.data);
+      displayMessage(`sorting items from ${command.data[0]} to ${command.data[1]}`);
+      break;
+    case 'sorted':
       const [i, j] = command.data;
-      underlineRange(i, j);
-      displayMessage(`searching minimum value from item ${i} to ${j}`);
+      displayMessage(`items from ${i} to ${j} are sorted`);
       break;
     case 'clear':
       appContext.range.remove(); 

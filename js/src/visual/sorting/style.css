@@ -1,6 +1,7 @@
 :root {
   --width: 600px;
 }
+
 #title {
   width: var(--width);
   text-align: center;
@@ -33,7 +34,12 @@
   height: 30px;
   border-radius: 5px;
 }
+
 #toolbar button:hover:enabled {
   background: #3366cc;
   color: yellow;
+}
+
+.katex {
+  font-size: 0.75em !important;
 }
