@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "dev": "parcel"
+    "dev": "parcel",
+    "build": "parcel build",
+    "watch": "parcel watch"
   },
   "keywords": [],
   "author": "",
