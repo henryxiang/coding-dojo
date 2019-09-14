@@ -97,11 +97,12 @@ function runCommand(command) {
       displayMessage(`considering range from ${command.data[0]} to ${command.data[1]}`);
       break;
     case 'bubbled':
-      highlightNode(command.data);
+      selectNode(command.data);
       displayMessage(`item ${command.data} is the maximum from 0 to ${command.data}`);
       break;
     case 'clear':
-      appContext.range.remove(); 
+      appContext.range.remove();
+      appContext.nodes.forEach(n => n.circle.attr({ 'stroke': 'black', 'stroke-width': 1 }));
       displayMessage('finished sorting');
       break;
     default:
@@ -135,6 +136,11 @@ function underlineRange(i, j) {
   appContext.range = paper
     .path(`M ${x} ${y} l ${length} 0 M ${x} ${y} l 0 -8 M ${x+length} ${y} l 0 -8`)
     .attr({ 'stroke': 'red', 'stroke-width': 3 });
+}
+
+function selectNode(i) {
+  const { nodes } = appContext;
+  nodes[i].circle.attr({ 'stroke': 'red', 'stroke-width': 3 });
 }
 
 function displayMessage(message) {

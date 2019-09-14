@@ -72,7 +72,6 @@ function autoPlay() {
   const tasks = []
   let timeline = 0;
   for (let i = 0; i < commands.length; i++) {
-    // timeline += replayInterval;
     const task = setTimeout(() => {
       runCommand(commands[i]);
     }, timeline);
@@ -89,7 +88,7 @@ function runCommand(command) {
       displayMessage(`swapping item ${command.data[1]} with the first in the range`);
       break;
     case 'highlight':
-      highlightNode(command.data);
+      selectNode(command.data);
       displayMessage(`item ${command.data} has the minimum value in the range`);
       break;
     case 'range':
@@ -98,7 +97,8 @@ function runCommand(command) {
       displayMessage(`searching minimum value from item ${i} to ${j}`);
       break;
     case 'clear':
-      appContext.range.remove(); 
+      appContext.range.remove();
+      appContext.nodes.forEach(n => n.circle.attr({ 'stroke': 'black', 'stroke-width': 1 }));
       displayMessage('finished sorting');
       break;
     default:
@@ -115,9 +115,9 @@ function swapNodes(i, j) {
   nodes[j] = n1
 }
 
-function highlightNode(i) {
-  const node = appContext.nodes[i];
-  node.highlight();
+function selectNode(i) {
+  const { nodes } = appContext;
+  nodes[i].circle.attr({ 'stroke': 'red', 'stroke-width': 3 });
 }
 
 function underlineRange(i, j) {

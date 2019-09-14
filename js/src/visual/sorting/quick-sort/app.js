@@ -150,7 +150,7 @@ function underlineRange(i, j) {
 }
 
 function selectPivot(i) {
-  const { nodes, pivot } = appContext;
+  const { nodes } = appContext;
   nodes[i].circle.attr({ 'stroke': 'red', 'stroke-width': 3 });
 }
 
