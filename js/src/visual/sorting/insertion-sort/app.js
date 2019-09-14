@@ -84,7 +84,7 @@ function runCommand(command) {
   switch(command.type) {
     case 'swap':
       swapNodes(...command.data);
-      displayMessage(`swapping item ${command.data[1]} with item ${command.data[0]}`);
+      displayMessage(`item ${command.data[1]} is smaller, swap it with item ${command.data[0]}`);
       break;
     case 'highlight':
       highlightNode(command.data);
