@@ -16,7 +16,6 @@ const appContext = {
   commands: null,
   step: 0,
   buttons: null,
-  pivot: null,
   high: null,
   low: null,
 };
@@ -97,7 +96,7 @@ function runCommand(command) {
       swapNodes(...command.data);
       displayMessage(`item ${command.data[0]} is ${rel} than the pivot; swap it with item ${command.data[1]}`);
       break;
-    case 'highlight':
+    case 'pivot':
       selectPivot(command.data);
       displayMessage(`choose item ${command.data} to be the pivot`);
       break;
@@ -114,7 +113,7 @@ function runCommand(command) {
       appContext.range.remove();
       appContext.high.remove();
       appContext.low.remove();
-      appContext.pivot.circle.attr({ 'stroke': 'black', 'stroke-width': 1 })
+      appContext.nodes.forEach(n => n.circle.attr({ 'stroke': 'black', 'stroke-width': 1 }));
       displayMessage('finished sorting');
       break;
     default:
@@ -152,11 +151,7 @@ function underlineRange(i, j) {
 
 function selectPivot(i) {
   const { nodes, pivot } = appContext;
-  if (pivot) {
-    pivot.circle.attr({ 'stroke': 'black', 'stroke-width': 1 });
-  }
   nodes[i].circle.attr({ 'stroke': 'red', 'stroke-width': 3 });
-  appContext.pivot = nodes[i];
 }
 
 function setLowHigh(l, h) {
