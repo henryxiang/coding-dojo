@@ -8,7 +8,8 @@
     "test:single": "jest -t",
     "dev": "parcel",
     "build": "parcel build",
-    "watch": "parcel watch"
+    "watch": "parcel watch",
+    "serve": "live-server dist/"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-runtime": "^6.26.0",
     "jest": "^24.9.0",
+    "live-server": "^1.2.1",
     "lodash": "^4.17.15",
     "parcel-bundler": "^1.12.3",
     "typescript": "^3.6.3"
