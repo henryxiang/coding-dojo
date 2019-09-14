@@ -3,12 +3,12 @@ import {shuffle, range, random} from 'lodash';
 import Raphael from 'raphael';
 import katex from 'katex';
 import 'katex/dist/katex.min.css';
-import Node, { swap } from '../../graph/graph-node';
-import { sort } from './selection-sort';
+import Node from '../../graph/graph-node';
+import { sort } from './merge-sort';
 
 const canvas = document.getElementById('canvas');
 const canvasSize = { width: canvas.clientWidth, height: canvas.clientHeight };
-const replayInterval = 2000;
+const replayInterval = 1800;
 const appContext = {
   paper: Raphael(canvas, canvasSize.width, canvasSize.height),
   data: null,
@@ -16,6 +16,8 @@ const appContext = {
   commands: null,
   step: 0,
   buttons: null,
+  divider: null,
+  temp: [],
 };
 
 main();
@@ -43,15 +45,14 @@ function init() {
     nodes[i] = node;
     paper.text(x, y + node.r + 10, i);
   }
-
-  document.getElementById('title').innerHTML = 'Selection Sort ' +
-    katex.renderToString("(O(n^2))");
+  document.getElementById('title').innerHTML = 'Merge Sort ' +
+    katex.renderToString('(O(n*log(n)))');
 }
 
 function sortData() {
   const { data } = appContext;
   const commands = [];
-  sort(data, (cmd) => commands.push(cmd))
+  sort(data, 0, data.length-1, (cmd) => commands.push(cmd))
   commands.push({ type: 'clear' });
   appContext.commands = commands;
   appContext.step = 0;
@@ -84,18 +85,23 @@ function autoPlay() {
 
 function runCommand(command) {
   switch(command.type) {
-    case 'swap':
-      swapNodes(...command.data);
-      displayMessage(`swapping item ${command.data[1]} with the first in the range`);
+    case 'copy':
+      const [start, end, mid] = command.data;
+      copyNodes(...command.data);
+      underlineRange(...command.data);
+      displayMessage(`merging items [${start}..${mid}] with items [${mid+1}..${end}]`);
       break;
-    case 'highlight':
-      highlightNode(command.data);
-      displayMessage(`item ${command.data} has the minimum value in the range`);
+    case 'merge':
+      mergeNode(...command.data);
+      displayMessage(`item ${command.data[0]} is smaller; put it to position ${command.data[1]}`);
       break;
     case 'range':
-      const [i, j] = command.data;
-      underlineRange(i, j);
-      displayMessage(`searching minimum value from item ${i} to ${j}`);
+      // underlineRange(...command.data);
+      // displayMessage(`sorting range from ${command.data[0]} to ${command.data[1]}`);
+      break;
+    case 'sorted':
+      appContext.divider.remove();
+      displayMessage(`items from ${command.data[0]} to ${command.data[1]} are sorted`);
       break;
     case 'clear':
       appContext.range.remove(); 
@@ -106,18 +112,33 @@ function runCommand(command) {
   }
 }
 
-function swapNodes(i, j) {
-  const { nodes } = appContext;
-  const n1 = nodes[i];
-  const n2 = nodes[j];
-  swap(n1, n2);
-  nodes[i] = n2;
-  nodes[j] = n1
+function copyNodes(start, end, mid) {
+  const { data, nodes, paper, temp } = appContext;
+  const seg = Math.floor(canvasSize.width / (data.length + 1));
+  let r = nodes[start].r;
+  let y = nodes[start].y - r - 40;
+  let x;
+  for (let i = start; i <= end; i++) {
+    x = nodes[i].x;
+    nodes[i].moveTo(x, y);
+    temp[i] = nodes[i];
+  }
+  x = nodes[mid].x + seg/2;
+  y = y - r;
+  if (appContext.divider) appContext.divider.remove();
+  appContext.divider = paper
+  .path(`M ${x} ${y} l 0 ${2*r}`)
+  .attr({ 'stroke': 'red', 'stroke-width': 2 });
 }
 
-function highlightNode(i) {
-  const node = appContext.nodes[i];
-  node.highlight();
+function mergeNode(from, to) {
+  const { nodes, temp, data } = appContext;
+  const seg = Math.floor(canvasSize.width / (data.length + 1));
+  const x = seg + seg*to;
+  const y = Math.floor(canvasSize.height / 2);
+  nodes[to] = temp[from];
+  nodes[to].highlight(800);
+  setTimeout(() => nodes[to].moveTo(x, y), 400);
 }
 
 function underlineRange(i, j) {

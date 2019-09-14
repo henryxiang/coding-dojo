@@ -8,7 +8,7 @@ import { sort } from './bubble-sort';
 
 const canvas = document.getElementById('canvas');
 const canvasSize = { width: canvas.clientWidth, height: canvas.clientHeight };
-const replayInterval = 3600;
+const replayInterval = 1800;
 const appContext = {
   paper: Raphael(canvas, canvasSize.width, canvasSize.height),
   data: null,
@@ -146,7 +146,7 @@ function onAutoPlay() {
   auto.disabled = true;
   next.disabled = true;
   reset.disabled = false;
-  autoPlay();
+  setTimeout(() => autoPlay(), 1000);
 }
 
 function onNextStep() {

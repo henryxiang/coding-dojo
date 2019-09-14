@@ -20,16 +20,16 @@ export default class Node {
     this.text = paper.text(x, y, label).attr({ 'font-size': fontSize });
   }
 
-  moveTo(x, y) {
+  moveTo(x, y, d = duration) {
     this.x = x;
     this.y = y;
-    this.text.animate({ x, y }, duration);
-    this.circle.animate({ cx: x, cy: y }, duration);
+    this.text.animate({ x, y }, d);
+    this.circle.animate({ cx: x, cy: y }, d)
   }
 
-  highlight() {
-    this.circle.animate({ fill: 'blue' }, duration, '<>', () => this.circle.animate({ fill: this.bgColor }, duration/4));
-    this.text.animate({ fill: 'white' }, duration, '<>', () => this.text.animate({ fill: 'black'}, duration/4));
+  highlight(d = duration) {
+    this.circle.animate({ fill: 'blue' }, d, '>', () => this.circle.animate({ fill: this.bgColor }, d/4));
+    this.text.animate({ fill: 'white' }, d, '>', () => this.text.animate({ fill: 'black'}, d/4));
   }
 }
 

@@ -8,7 +8,7 @@ import { sort } from './insertion-sort';
 
 const canvas = document.getElementById('canvas');
 const canvasSize = { width: canvas.clientWidth, height: canvas.clientHeight };
-const replayInterval = 2000;
+const replayInterval = 1800;
 const appContext = {
   paper: Raphael(canvas, canvasSize.width, canvasSize.height),
   data: null,
