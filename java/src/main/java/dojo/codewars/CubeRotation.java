@@ -157,9 +157,7 @@ public class CubeRotation {
 
     private static char[][] fillColor(char c) {
         char[][] out = new char[2][2];
-        for (int i = 0; i < out.length; i++) {
-            Arrays.fill(out[i], c);
-        }
+        for (int i = 0; i < out.length; i++) Arrays.fill(out[i], c);
         return out;
     }
 }
