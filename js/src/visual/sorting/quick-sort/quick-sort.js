@@ -17,7 +17,7 @@ const shuffle = (data) => {
 
 const partition = (data, start, end, log = defaultLogger) => {
   const pivot = data[start];
-  log({type: 'highlight', data: start});
+  log({type: 'pivot', data: start});
   let l = start, h = end, i = start+1;
   while (i <= h) {
     log({type: 'chosen', data: i});

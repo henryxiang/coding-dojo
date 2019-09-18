@@ -71,7 +71,6 @@ function autoPlay() {
   const tasks = []
   let timeline = 0;
   for (let i = 0; i < commands.length; i++) {
-    // timeline += replayInterval;
     const task = setTimeout(() => {
       runCommand(commands[i]);
     }, timeline);
@@ -85,22 +84,29 @@ function runCommand(command) {
   switch(command.type) {
     case 'swap':
       swapNodes(...command.data);
-      displayMessage(`swapping item ${command.data[1]} with item ${command.data[0]}`);
+      displayMessage(`item ${command.data[1]} is smaller, swap it with item ${command.data[0]}`);
       break;
     case 'highlight':
       highlightNode(command.data);
+      highlightNode(command.data - 1);
       displayMessage(`putting item ${command.data} to the correct position in the range`);
       break;
     case 'range':
       underlineRange(...command.data);
+      selectNode(command.data[0]);
+      selectNode(command.data[1]);
       displayMessage(`sorting items from ${command.data[0]} to ${command.data[1]}`);
       break;
     case 'sorted':
       const [i, j] = command.data;
+      for (let n = i; n <= j; n++) {
+        highlightNode(n);
+      }
       displayMessage(`items from ${i} to ${j} are sorted`);
       break;
     case 'clear':
-      appContext.range.remove(); 
+      appContext.range.remove();
+      appContext.nodes.forEach(n => n.circle.attr({ 'stroke': 'black', 'stroke-width': 1 }));
       displayMessage('finished sorting');
       break;
     default:
@@ -120,6 +126,11 @@ function swapNodes(i, j) {
 function highlightNode(i) {
   const node = appContext.nodes[i];
   node.highlight();
+}
+
+function selectNode(i) {
+  const { nodes } = appContext;
+  nodes[i].circle.attr({ 'stroke': 'red', 'stroke-width': 3 });
 }
 
 function underlineRange(i, j) {
